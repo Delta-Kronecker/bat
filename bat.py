@@ -31,9 +31,9 @@ params = {
 
     # base reproduction and epsilons
     'C_N_base': Decimal('1'),       # base reproduction for normals
-    'eps_G_base': Decimal('0.0001'),
-    'eps_S_base': Decimal('0.0001'),
-    'eps_H_base': Decimal('0.0001'),
+    'eps_G_base': Decimal('0.00000001'),
+    'eps_S_base': Decimal('0.00000001'),
+    'eps_H_base': Decimal('0.00000001'),
 
     # base mortality (per-category bases)
     'delta_N_base': Decimal('0.5'),
