@@ -45,7 +45,7 @@ jobs:
     # اجرای سیمولیشن
     - name: Run bat population simulation
       run: |
-        python kkkkkkkkkk/bat.py
+        python bat.py
 
     # نمایش محتویات فایل CSV (اختیاری - برای بررسی)
     - name: Display CSV summary (first 20 lines)
