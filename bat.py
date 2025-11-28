@@ -7,7 +7,7 @@ from tqdm import tqdm
 
 # ------------------------
 # Precision for Decimal
-getcontext().prec = 120
+getcontext().prec = 20
 # ------------------------
 LN2 = Decimal(2).ln()
 NEG_INF = Decimal('-Infinity')
@@ -42,8 +42,8 @@ params = {
     'delta_H_base': Decimal('0.5'),
 
     # exponential multipliers
-    'a_repro': Decimal('0.1'),   # M(n) = 1 + a*(1 - exp(-k*n))
-    'k_repro': Decimal('0.000001'),
+    'a_repro': Decimal('0.000001'),   # M(n) = 1 + a*(1 - exp(-k*n))
+    'k_repro': Decimal('0.0000001'),
     'h_mort':  Decimal('0.000001'),  # D(n) = exp(-h*n)
 
     # whether to use double-epsilon factor in C (C = C_N_base + 2*eps)
