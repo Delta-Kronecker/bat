@@ -28,4 +28,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: simulation-results
-          path: co_evolution_GSH_genotype_frequency.csv
+          path: co_evolution_GSH_phenotype_frequency.csv
