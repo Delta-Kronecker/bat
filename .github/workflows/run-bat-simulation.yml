@@ -1,110 +1,31 @@
-name: Run Bat Population Simulation
+name: Run Simulation
 
 on:
-  # اجرا با هر push به main/master
   push:
     branches:
       - main
-      - master
-
-  # اجرا با هر pull request
-  pull_request:
-    branches:
-      - main
-      - master
-
-  # امکان اجرای دستی
   workflow_dispatch:
 
-  # اجرا به صورت زمان‌بندی شده (هر روز ساعت 00:00 UTC)
-  schedule:
-    - cron: '0 0 * * *'
-
 jobs:
-  run-simulation:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-    # دانلود کد از repository
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
-    # نصب Python
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
-        cache: 'pip'
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
 
-    # نصب کتابخانه‌های مورد نیاز
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install tqdm pandas matplotlib seaborn
+      - name: Install dependencies
+        run: pip install -r requirements.txt
 
-    # اجرای سیمولیشن
-    - name: Run bat population simulation
-      run: |
-        python bat.py
+      - name: Run simulation
+        run: python bat.py
 
-    # نمایش محتویات فایل CSV (اختیاری - برای بررسی)
-    - name: Display CSV summary (first 20 lines)
-      if: success()
-      run: |
-        if [ -f "bat_population_summary.csv" ]; then
-          echo "CSV file created successfully!"
-          head -n 20 bat_population_summary.csv
-        else
-          echo "CSV file not found!"
-        fi
-
-    # لیست کردن فایل‌های تولید شده
-    - name: List generated files
-      if: success()
-      run: |
-        ls -lh *.csv *.png 2>/dev/null || echo "Some files may not have been generated"
-
-    # آپلود فایل CSV به عنوان artifact
-    - name: Upload CSV results
-      if: success()
-      uses: actions/upload-artifact@v4
-      with:
-        name: simulation-csv-results
-        path: bat_population_summary.csv
-        retention-days: 30
-
-    # آپلود نمودارها به عنوان artifact
-    - name: Upload charts
-      if: success()
-      uses: actions/upload-artifact@v4
-      with:
-        name: simulation-charts
-        path: |
-          bat_population_charts.png
-          bat_frequency_detailed.png
-          bat_population_detailed.png
-        retention-days: 30
-
-    # آپلود همه نتایج در یک فایل
-    - name: Upload all results
-      if: success()
-      uses: actions/upload-artifact@v4
-      with:
-        name: all-simulation-results
-        path: |
-          bat_population_summary.csv
-          *.png
-        retention-days: 90
-
-    # ذخیره نتایج در release (اختیاری - فقط برای tag ها)
-    - name: Create Release with Results
-      if: startsWith(github.ref, 'refs/tags/')
-      uses: softprops/action-gh-release@v1
-      with:
-        files: |
-          bat_population_summary.csv
-          bat_population_charts.png
-          bat_frequency_detailed.png
-          bat_population_detailed.png
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload CSV artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: simulation-results
+          path: co_evolution_GSH_genotype_frequency.csv
