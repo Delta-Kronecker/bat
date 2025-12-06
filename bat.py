@@ -2,12 +2,7 @@ import csv
 from decimal import Decimal, getcontext
 from tqdm import tqdm
 
-# تنظیم دقت بالا برای محاسبات Decimal
 getcontext().prec = 30
-
-# ------------------------------------------------------------
-# 0. پارامترهای ورودی مدل (همه Decimal)
-# ------------------------------------------------------------
 
 NUM_GENERATIONS = 1500000
 SAVE_INTERVAL = 100
@@ -17,15 +12,10 @@ LAMBDA = Decimal('0.5')
 
 LOCI = ['G', 'S', 'H']
 INITIAL_MU0 = {'G': Decimal('1.0'), 'S': Decimal('1.0'), 'H': Decimal('1.0')}
-FIXED_EPSILON = {'G': Decimal('0.0000002'), 'S': Decimal('0.0000001'), 'H': Decimal('0.0000003')}
-INITIAL_ALPHA = {'G': Decimal('0.00002'), 'S': Decimal('0.00001'), 'H': Decimal('0.00003')}
+FIXED_EPSILON = {'G': Decimal('0.000002'), 'S': Decimal('0.000001'), 'H': Decimal('0.000003')}
+INITIAL_ALPHA = {'G': Decimal('0.0002'), 'S': Decimal('0.0001'), 'H': Decimal('0.0003')}
 
 OUTPUT_FILENAME = 'co_evolution_GSH_genotype_frequency.csv'
-
-
-# ------------------------------------------------------------
-# 1. آماده‌سازی و توابع کمکی
-# ------------------------------------------------------------
 
 def get_all_genotypes():
     genotypes_state_G = ['GG', 'Gg', 'gg']
@@ -59,7 +49,6 @@ ALL_GENOTYPES, HAS_DOMINANT_ALLELE = get_all_genotypes()
 
 
 def get_initial_population():
-    # مقادیر اولیه ارائه شده توسط کاربر، تبدیل به Decimal
     N_i_float = {
         'GGSSHH': 0, 'GGSSHh': 0, 'GGSShh': 0,
         'GGSsHH': 0, 'GGSsHh': 0, 'GGSshh': 0,
@@ -78,10 +67,6 @@ def get_initial_population():
 
     return N_i
 
-
-# ------------------------------------------------------------
-# 2. تعریف کلاس SimulationState (با محاسبه فراوانی)
-# ------------------------------------------------------------
 
 class SimulationState:
     def __init__(self, generation, N_total):
@@ -120,10 +105,6 @@ class SimulationState:
 
         return data
 
-
-# ------------------------------------------------------------
-# 3. توابع فازهای مدل
-# ------------------------------------------------------------
 
 def phase_1_analysis(current_state, previous_mu_bar):
     new_alpha = {}
@@ -253,10 +234,6 @@ def phase_4_dynamics(current_state, N_i_after_selection):
     return N_i_next, N_Total_next
 
 
-# ------------------------------------------------------------
-# 4. اجرای شبیه‌سازی
-# ------------------------------------------------------------
-
 def run_simulation():
     N_i_initial = get_initial_population()
 
@@ -266,12 +243,10 @@ def run_simulation():
     N_i_current = N_i_initial
     alpha_current = INITIAL_ALPHA.copy()
 
-    # ایجاد شیء حالت برای تعیین ستون‌های CSV
     initial_state_for_header = SimulationState(0, N_Total_current)
     initial_state_for_header.mu0 = INITIAL_MU0
     initial_state_for_header.alpha = INITIAL_ALPHA
 
-    # فراوانی‌ها را محاسبه کن تا کلیدها در to_dict تولید شوند.
     initial_state_for_header.calculate_frequencies()
     fieldnames = list(initial_state_for_header.to_dict().keys())
 
@@ -282,7 +257,7 @@ def run_simulation():
         for t in tqdm(range(NUM_GENERATIONS + 1), desc="Running Simulation"):
 
             if N_Total_current == Decimal('0'):
-                print("جمعیت به صفر رسید. شبیه‌سازی متوقف شد.")
+                print("Population reached zero. Simulation stopped.")
                 break
 
             current_state = SimulationState(t, N_Total_current)
@@ -303,7 +278,7 @@ def run_simulation():
             N_Total_current = N_Total_next
             N_i_current = N_i_next_float
 
-    print(f"شبیه‌سازی با موفقیت پایان یافت. نتایج در فایل '{OUTPUT_FILENAME}' ذخیره شد.")
+    print(f"Simulation finished successfully. Results saved in '{OUTPUT_FILENAME}'.")
 
 
 run_simulation()
