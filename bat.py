@@ -13,9 +13,9 @@ LAMBDA = Decimal('0.5')
 LOCI = ['G', 'S', 'H']
 INITIAL_MU0 = {'G': Decimal('1.0'), 'S': Decimal('1.0'), 'H': Decimal('1.0')}
 FIXED_EPSILON = {'G': Decimal('0.00002'), 'S': Decimal('0.00001'), 'H': Decimal('0.00003')}
-INITIAL_ALPHA = {'G': Decimal('0.002'), 'S': Decimal('0.001'), 'H': Decimal('0.003')}
+INITIAL_ALPHA = {'G': Decimal('0.0002'), 'S': Decimal('0.0001'), 'H': Decimal('0.0003')}
 
-OUTPUT_FILENAME = 'co_evolution_GSH_genotype_frequency.csv'
+OUTPUT_FILENAME = 'co_evolution_GSH_phenotype_frequency.csv'
 
 def get_all_genotypes():
     genotypes_state_G = ['GG', 'Gg', 'gg']
@@ -46,7 +46,7 @@ def get_all_genotypes():
 
 
 ALL_GENOTYPES, HAS_DOMINANT_ALLELE = get_all_genotypes()
-
+PHENOTYPES = ['GSH', 'GSh', 'GsH', 'Gsh', 'gSH', 'gSh', 'gsH', 'gsh']
 
 def get_initial_population():
     N_i_float = {
@@ -100,8 +100,18 @@ class SimulationState:
 
         data['C_bar'] = str(self.C_bar)
 
+        phenotype_freqs = {p: Decimal('0') for p in PHENOTYPES}
+
         for g in ALL_GENOTYPES:
-            data[f'f_{g}'] = str(self.f_i.get(g, Decimal('0.0')))
+            phenotype_key = ''
+            phenotype_key += 'G' if HAS_DOMINANT_ALLELE(g, 'G') else 'g'
+            phenotype_key += 'S' if HAS_DOMINANT_ALLELE(g, 'S') else 's'
+            phenotype_key += 'H' if HAS_DOMINANT_ALLELE(g, 'H') else 'h'
+            
+            phenotype_freqs[phenotype_key] += self.f_i.get(g, Decimal('0'))
+
+        for phenotype, freq in phenotype_freqs.items():
+            data[f'f_{phenotype}'] = str(freq)
 
         return data
 
