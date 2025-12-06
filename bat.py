@@ -3,13 +3,13 @@ from decimal import Decimal, getcontext
 from tqdm import tqdm
 
 # تنظیم دقت بالا برای محاسبات Decimal
-getcontext().prec = 15
+getcontext().prec = 30
 
 # ------------------------------------------------------------
 # 0. پارامترهای ورودی مدل (همه Decimal)
 # ------------------------------------------------------------
 
-NUM_GENERATIONS = 10000
+NUM_GENERATIONS = 1500000
 SAVE_INTERVAL = 100
 
 C0 = Decimal('1.0')
