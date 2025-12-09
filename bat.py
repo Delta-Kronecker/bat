@@ -13,7 +13,7 @@ LAMBDA = Decimal('0.5')
 LOCI = ['G', 'S', 'H']
 INITIAL_MU0 = {'G': Decimal('1.0'), 'S': Decimal('1.0'), 'H': Decimal('1.0')}
 FIXED_EPSILON = {'G': Decimal('0.000002'), 'S': Decimal('0.000001'), 'H': Decimal('0.000003')}
-INITIAL_ALPHA = {'G': Decimal('0.0002'), 'S': Decimal('0.0001'), 'H': Decimal('0.0003')}
+INITIAL_ALPHA = {'G': Decimal('0.0001'), 'S': Decimal('0.00005'), 'H': Decimal('0.00015')}
 
 OUTPUT_FILENAME = 'co_evolution_GSH_phenotype_frequency.csv'
 
